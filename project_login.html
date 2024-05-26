@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,29 +9,70 @@
 <body>
     <div class="container">
         <div class="login_square">
-           <div class="login_name">SelfBook</div>
+            <div class="login_name">SelfBook</div>
             <div class="login">
-                <table>
-                    <tr>
-                        <td><label for="id" class="login_menu">아이디</label></td>
-                        <td><input id="id" type="text" name="id"></td>
-                    </tr>
-                    
-                    <tr>
-                        <td><label for="password" class="login_menu">비밀번호</label></td>
-                        <td><input id="password" type="text" name="password"></td>
-                    </tr>
-    
-                    <tr>
-                        <td></td>
-                        <td><input id="login" type="submit" value="로그인"></td>
-                    </tr>
-                </table>
+                <form id="loginForm">
+                    <table>
+                        <tr>
+                            <td><label for="logInEmail" class="login_menu">이메일</label></td>
+                            <td><input type="email" id="logInEmail" required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="logInPassword" class="login_menu">비밀번호</label></td>
+                            <td><input type="password" id="logInPassword" required></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="submit" id="logInButton">로그인</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
             </div>
             <div>
-                <a href="project_signin.html"><div class="signin_button">회원가입</div></a> 
+                <a href="project_signin.html"><div class="login_user">회원가입</div></a> 
             </div>
         </div>
     </div>
 </body>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBsC48vTn3D7sCJHkqBQ2A6wVgkax96IPg",
+        authDomain: "selfbook-4ad99.firebaseapp.com",
+        projectId: "selfbook-4ad99",
+        storageBucket: "selfbook-4ad99.appspot.com",
+        messagingSenderId: "524293661331",
+        appId: "1:524293661331:web:3476ad472b7d719ce1a366"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    document.getElementById('loginForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const email = document.getElementById('logInEmail').value;
+        const password = document.getElementById('logInPassword').value;
+        const auth = getAuth();
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log(userCredential);
+            // Signed in
+            const user = userCredential.user;
+            // Further actions on success, like redirecting the user
+            window.location.href = 'project_main_2nd.html';
+        } catch (error) {
+            console.error('Error:', error);
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // Display error message to the user
+            alert('이메일 또는 비밀번호를 다시 확인해주세요.');
+        }
+    });
+</script>
 </html>
