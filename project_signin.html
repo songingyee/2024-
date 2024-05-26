@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,46 +11,71 @@
         <div class="signin_square">
             <div class="login_name">SelfBook</div>
             <div class="signin">
-                <table>
-                    <tr>
-                        <td><label for="username" class="signin_menu">성명</label></td>
-                        <td><input id="username" type="text" name="username"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="id" class="signin_menu">아이디</label></td>
-                        <td><input id="id" type="text" name="id"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="password" class="signin_menu">비밀번호</label></td>
-                        <td><input id="password" type="text" name="password"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="number" class="signin_menu">휴대폰</label></td>
-                        <td><select>
-                        <option>010</option>
-                        <option>011</option>
-                        <option>012</option>
-                        <option>013</option>
-                        <option>014</option>
-                        <option>015</option>
-                        <option>016</option>
-                        <option>017</option>
-                        <option>018</option>
-                        <option>019</option></select>
-                        -
-                       <input id="number" type="text" name="number">
-                    </td>
-                    </tr>
-                    
-                </table>
-                <tr>
-                    <td><a href="project_main_2nd.html"><input type="submit" value="완료" class="submit_button"></a></td>
-                </tr>
-                <tr>
-                    <td><a href="project_login.html" class="back">back</a></td>
-                </tr>
+                <form id="signupForm">
+                    <table>
+                        <tr>
+                            <td><label for="signInEmail" class="signin_menu">이메일</label></td>
+                            <td><input type="email" id="signInEmail" required></td>
+                        </tr>
+                        <tr>
+                            <td><label for="signInPassword" class="signin_menu">비밀번호</label></td>
+                            <td><input type="password" id="signInPassword" required></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="submit" id="signInButton">회원가입</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <div class="setting">비밀번호는 6자 이상으로 설정 바랍니다.</div>
+                <a href="project_login.html" class="back">Back to Login</a>
             </div>
         </div>
     </div>
 </body>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBsC48vTn3D7sCJHkqBQ2A6wVgkax96IPg",
+        authDomain: "selfbook-4ad99.firebaseapp.com",
+        projectId: "selfbook-4ad99",
+        storageBucket: "selfbook-4ad99.appspot.com",
+        messagingSenderId: "524293661331",
+        appId: "1:524293661331:web:3476ad472b7d719ce1a366"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    document.getElementById('signupForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const email = document.getElementById('signInEmail').value;
+        const password = document.getElementById('signInPassword').value;
+        const auth = getAuth();
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            console.log(userCredential);
+            // Signed in 
+            const user = userCredential.user;
+            // Further actions on success, like redirecting the user
+            alert('회원가입이 성공적으로 완료되었습니다!');
+        } catch (error) {
+            console.error('Error:', error);
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // Display error message to the user
+            if (errorCode === 'auth/email-already-in-use') {
+                alert('이미 존재하는 이메일입니다.');
+            } else {
+                alert('이메일 혹은 비밀번호를 다시 입력해주세요.');
+            }
+        }
+        });
+</script>
 </html>
