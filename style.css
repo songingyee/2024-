@@ -11,6 +11,7 @@ div.item{
   float:left;
 }
 
+/***main**/
   .Rectangle-1 {
     width: 1000px;
     height: 38px;
@@ -20,11 +21,10 @@ div.item{
     background-color: #323137;
   }
   .Main-Calender {
-    width: 150px;
+    width: 170px;
     height: 38px;
     font-family: NotoSerif;
     font-size: 15px;
-    margin:0 2px;
     line-height: 38px;
     font-weight: normal;
     font-stretch: normal;
@@ -72,6 +72,18 @@ div.item{
     line-height: 10px;
     color:#fff;
     background-color: #4a6add;
+  }
+  .menuLogout {
+    width: 60px;
+    height: 10px;
+    margin: 5px;
+    float:left;
+    padding: 10px;
+    border-radius: 30px;
+    text-align: center;
+    line-height: 10px;
+    color:#fff;
+    background-color: skyblue;
   }
 
   #info{
@@ -220,7 +232,8 @@ div.item{
     text-align: center;
     color: #65636d;
   }
-/*mainInputNum*/
+
+/***mainInputNum***/
 .amountButton {
   width: 110px;
   height: 50px;
@@ -243,7 +256,7 @@ div.item{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: gray;
+  background-color: #f0f0f0;
   padding: 20px;
   border-radius: 10px;
   width: 250px;
@@ -273,6 +286,15 @@ div.item{
   border-radius: 3px;
   font-size: 14px;
 }
+.removeAmountItem {
+  background: #e85151;
+  color: white;
+  border: none;
+  padding: 2px 5px;
+  cursor: pointer;
+  margin-left: 10px;
+  float:right;
+}
 
 /* Overlay for modal background */
 #overlay {
@@ -292,7 +314,7 @@ div.item{
   margin-bottom: 10px;
 }
 
-/*project_detail*/
+/***project_detail***/
 .detail_square{
   width:960px;
   height: 560px;
@@ -301,7 +323,7 @@ div.item{
   background-color: white;  
 }
 
-/*Invest*/
+/***Invest***/
 .invest_square{
   width:890px;
   height: 650px;
@@ -348,38 +370,6 @@ div.item{
   color: #878494;
 }
 
-#invest_input_1{
-  width:350px;
-  height: 210px;
-  margin:0 auto;
-  border-radius: 20px;
-  box-shadow: 3px 3px 4px 0 rgba(148, 141, 141, 0.25);
-  background-color: #fff;
-}
-#invest_input_2{
-  width:350px;
-  height: 210px;
-  margin:0 auto;
-  border-radius: 20px;
-  box-shadow: 3px 3px 4px 0 rgba(148, 141, 141, 0.25);
-  background-color: #fff;
-}
-#invest_input_3{
-  width:350px;
-  height: 180px;
-  margin:10px auto;
-  border-radius: 20px;
-  box-shadow: 3px 3px 4px 0 rgba(148, 141, 141, 0.25);
-  background-color: #fff;
-}
-#invest_input_4{
-  width:350px;
-  height: 210px;
-  margin:0 auto;
-  border-radius: 20px;
-  box-shadow: 3px 3px 4px 0 rgba(148, 141, 141, 0.25);
-  background-color: #fff;
-}
 .invest_textBox{
   width:380px;
   height:50px;
@@ -400,7 +390,112 @@ div.item{
     font-weight: 700;
     text-align: center;
 }
-/*login*/
+
+/***investInput***/
+.investInput{
+  display: inline-block;
+  color: black;
+  border: none;
+  cursor: pointer;
+  width:350px;
+  height: 210px;
+  text-align: center;
+  vertical-align: middle;
+  overflow-y: auto; /* 스크롤바 추가 */
+  word-wrap: break-word;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  margin:0 auto;
+  border-radius: 20px;
+  box-shadow: 3px 3px 4px 0 rgba(148, 141, 141, 0.25);
+  background-color: #fff;
+}
+.investInputWishlist{
+  display: inline-block;
+  color: black;
+  border: none;
+  cursor: pointer;
+  width:350px;
+  height: 180px;
+  text-align: center;
+  vertical-align: middle;
+  overflow-y: auto; /* 스크롤바 추가 */
+  word-wrap: break-word;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  margin:10px auto;
+  border-radius: 20px;
+  box-shadow: 3px 3px 4px 0 rgba(148, 141, 141, 0.25);
+  background-color: #fff;
+}
+#investOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#investAmountForm {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.investAmountItem {
+  background-color:#edf6ff;
+  margin: 5px 0;
+  padding: 5px;
+  border-radius: 5px;
+  display: flex;
+  margin:10px auto 2px auto;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%; /* 입력된 내용의 너비 */
+}
+
+.investRemoveAmountItem {
+  cursor: pointer;
+  margin-left: 10px;
+  background-color: #e85151;
+  border:none;
+  width:15px;
+  height:15px;
+}
+/***investInputwishlist***/
+#investOWishlist {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#investAFWishlist {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/***login***/
 .login_square {
   width: 450px;
   height: 500px;
