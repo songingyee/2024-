@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="logoutstyle.css">
+    <title>Infinite Scroll Quotes</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <style>
+        .BackToLogin{
+            position:fixed;
+            background-color:#d7e2ec;
+            color:black;
+            text-align: center;
+            line-height: 80px;
+            font-size: 30px;
+            width:300px;
+            height:80px;
+            left:37%; top:45%;
+            z-index:100;
+            border-radius: 30px;
+            box-shadow: 5px 5px 4px 0 #ddd;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+        const quotes = [
+            { text: "자동화는 저축의 열쇠이다.", author: "데이비드 바크" },
+            { text: "돈을 관리하는 방식이 곧 당신의 인생을 관리하는 방식이다.", author: "수지 오만" },
+            { text: "연 수입이 20파운드이고 연 지출이 19파운드이면, 행복이다.", author: "찰스 디킨스" },
+            { text: "부유해지기 위해서는 무언가를 소유하기보다 자유를 누리는 것이 더 중요하다.", author: "헨리 데이비드 소로" },
+            { text: "작은 비용을 관리하는 것이 큰 비용을 관리하는 것만큼 중요하다.", author: "존 D. 록펠러" },
+            { text: "자신의 자산을 관리하는 데 시간을 투자하라. 그것이 당신의 미래를 결정할 것이다.", author: "앤드류 카네기" },
+            { text: "돈이 돈을 벌어들이게 하라.", author: "J.P. 모건" },
+            { text: "자신의 투자에 대해 의문을 가져라.", author: "조지 소로스" },
+            { text: "부채를 줄이는 것이 가장 좋은 투자이다.", author: "데이브 램지" },
+            { text: "다양한 소득원을 만들어라.", author: "로버트 앨런" },
+            { text: "안전 마진을 고려한 투자를 하라.", author: "벤저민 그레이엄" },
+            { text: "자신이 이해하는 것에 투자하라.", author: "피터 린치" },
+            { text: "좋은 기회를 기다려라.", author: "찰리 멍거" },
+            { text: "분산 투자로 위험을 줄여라.", author: "데이비드 리카도" },
+            { text: "비관론에서 사고, 낙관론에서 팔아라.", author: "존 템플턴" },
+            { text: "리스크를 관리하라.", author: "리처드 브랜슨" },
+            { text: "장기 투자를 지향하라.", author: "폴 새뮤얼슨" },
+            { text: "모든 달걀을 한 바구니에 담지 마라.", author: "마크 트웨인" },
+            { text: "돈이 당신을 위해 일하게 하라.", author: "워런 버핏" },
+            { text: "작은 성공을 축하하라.", author: "톰 피터스" },
+            { text: "단순하게 살아라.", author: "칼 리차즈" },
+            { text: "투자는 돈을 두 배로 만들기 위해 당신의 재정을 반으로 줄이는 예술이다.", author: "윌 로저스" },
+            { text: "부동산 투자는 길고 안정적인 수익을 준다.", author: "도널드 트럼프" },
+            { text: "자산은 돈을 당신의 주머니에 넣어주는 것이다.", author: "로버트 기요사키" },
+            { text: "저비용 인덱스 펀드에 투자하라.", author: "버턴 말킬" },
+            { text: "시장 흐름에 휩쓸리지 마라.", author: "제임스 로저스" },
+            { text: "자산을 보호하고, 성장시키며, 즐기라.", author: "토니 로빈스" }
+        ];
+
+        let quoteIndex = 0;
+
+        function loadQuotes() {
+            const $quoteList = $('.quote-list');
+            for (let i = 0; i < 100; i++) {
+                if (quoteIndex >= quotes.length) break;
+                const quote = quotes[quoteIndex];
+                const $item = $(`<div class="item">"${quote.text}", ${quote.author}</div>`);
+                $quoteList.append($item);
+                quoteIndex++;
+            }
+        }
+
+        loadQuotes();
+
+        $(document).ready(function () {
+            const $quoteList = $('.quote-list').masonry({
+                itemSelector: '.item',
+                columnWidth: '.item',
+                percentPosition: true
+            });
+        
+            $quoteList.imagesLoaded().progress( function() {
+                $quoteList.masonry('layout');
+            });
+        });
+        
+    });
+    </script>
+</head>
+<body>
+    <div class="quote-list">
+    <div><a href="project_main.html"><botton class="BackToLogin">Login</button></a></div>
+    <div class="item" id="c1">"자동화는 저축의 열쇠이다.", 데이비드 바크</div>
+    <div class="item" >"돈을 관리하는 방식이 곧 당신의 인생을 관리하는 방식이다.", 수지 오만</div>
+    <div class="item" >"연 수입이 20파운드이고 연 지출이 19파운드이면, 행복이다.", 찰스 디킨스</div>
+    <div class="item" id="c4">"부유해지기 위해서는 무언가를 소유하기보다 자유를 누리는 것이 더 중요하다.", 헨리 데이비드 소로</div>
+    <div class="item">"작은 비용을 관리하는 것이 큰 비용을 관리하는 것만큼 중요하다.", 존 D. 록펠러</div>
+    <div class="item">"자신의 자산을 관리하는 데 시간을 투자하라. 그것이 당신의 미래를 결정할 것이다.", 앤드류 카네기</div>
+    <div class="item" id="c2">"돈이 돈을 벌어들이게 하라.", J.P. 모건</div>
+    <div class="item">"자신의 투자에 대해 의문을 가져라.", 조지 소로스</div>
+    <div class="item">"부채를 줄이는 것이 가장 좋은 투자이다.", 데이브 램지</div>
+    <div class="item" id="c3">"다양한 소득원을 만들어라.", 로버트 앨런</div>
+    <div class="item">"안전 마진을 고려한 투자를 하라.", 벤저민 그레이엄</div>
+    <div class="item" id=>"자신이 이해하는 것에 투자하라.", 피터 린치</div>
+    <div class="item" id="c4">"좋은 기회를 기다려라.", 찰리 멍거</div>
+    <div class="item">"분산 투자로 위험을 줄여라.", 데이비드 리카도</div>
+    <div class="item">"비관론에서 사고, 낙관론에서 팔아라.", 존 템플턴</div>
+    <div class="item" id="c1">"리스크를 관리하라.", 리처드 브랜슨</div>
+    <div class="item">"장기 투자를 지향하라.", 폴 새뮤얼슨</div>
+    <div class="item">"모든 달걀을 한 바구니에 담지 마라.", 마크 트웨인</div>
+    <div class="item" id="c2">"돈이 당신을 위해 일하게 하라.", 워런 버핏</div>
+    <div class="item">"작은 성공을 축하하라.", 톰 피터스</div>
+    <div class="item">"단순하게 살아라.", 칼 리차즈</div>
+    <div class="item" id="c3">"투자는 돈을 두 배로 만들기 위해 당신의 재정을 반으로 줄이는 예술이다.", 윌 로저스</div>
+    <div class="item">"부동산 투자는 길고 안정적인 수익을 준다.", 도널드 트럼프</div>
+    <div class="item">"자산은 돈을 당신의 주머니에 넣어주는 것이다.", 로버트 기요사키</div>
+    <div class="item">"저비용 인덱스 펀드에 투자하라.", 버턴 말킬</div>
+    <div class="item">"시장 흐름에 휩쓸리지 마라.", 제임스 로저스</div>
+    <div class="item" id="c4">"자산을 보호하고, 성장시키며, 즐기라.", 토니 로빈스</div>    
+    </div>
+
+    <div class="page-load-status">
+        <p class="infinite-scroll-request">Loading...</p>
+    </div>
+</body>
+</html>
+
+
+
