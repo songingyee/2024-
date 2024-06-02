@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0">
+    <style>
+      @media screen and (min-width:1001px) and (max-width:1400px){
+          .headline{
+              display:none;
+          }
+          #bar{
+              display:none;
+          }
+      }
+  </style>
+    <title>categorychart</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const infoButton = document.getElementById('info');
+        infoButton.addEventListener('click', function() {
+            alert(' ✅ 첫페이지의 캘린더에 수입과 지출을 기록해요.\n ✅ Plan에서는 소비의 목표치를 세울 수 있어요.\n ✅ Invest를 누르면 미래를 위한 기록을 할 수 있어요.');
+        });
+    });
+    </script>
+</head>
+<body>
+    <!--페이지 종류 표시바-->
+    <header>
+        <div class="container">
+            <div class="Rectangle-1">
+                <div class="Main-Calender">
+                    SelfBook > Plan
+                </div>
+            </div>
+        </div>
+    </header>
+    <!--제목-->
+    <div class="headline">
+        <br><h1>스스로 만드는 가계부, 셀프북</h1>
+    </div>
+<br><hr id="bar"><br>
+<nav>
+    <div class="container">
+        <div class="menu" id="info">Info</div></a>
+        <a href="project_Plan.html"><div class="menu">Plan</div></a> 
+        <a href="project_Invest.html"><div class="menu">Invest</div></a>
+        <a href="project_main.html"><div class="menu">Main</div></a>
+    </div>
+</nav>
+<br><br><br>
+<section>
+    <br>
+    <h4>🖱️ 차트를 업데이트하기 위해서는 입력이 필요해요. </h4>
+    <br><br><br>
+    <form id="categoryForm">
+        <div class="form-group">
+            <label for="food">식비:</label>
+            <input type="number" id="food" name="food" min="0" value="0">
+        </div>
+        <div class="form-group">
+            <label for="convenience">편의점/마트/잡화:</label>
+            <input type="number" id="convenience" name="convenience" min="0" value="0">
+        </div>
+        <div class="form-group">
+            <label for="clothing">의류:</label>
+            <input type="number" id="clothing" name="clothing" min="0" value="0">
+        </div>
+        <div class="form-group">
+            <label for="other">기타:</label>
+            <input type="number" id="other" name="other" min="0" value="0">
+        </div>
+        <button type="button" onclick="saveData()">저장</button>
+    </form>
+      <br><br><br><br>
+    <h4>🖱️ 차트 위에 마우스를 올려서 카테고리별로 목표한 크기를 확인해보세요 </h4>
+    <br>
+    <div class="container">
+        <div class="E1"></div><div class="cg1">식비</div>
+        <div class="E2"></div><div class="cg2">편의점/마트/잡화</div>
+        <div class="E3"></div><div class="cg1">의류</div>
+        <div class="E4"></div><div class="cg1">기타</div>
+    <div class="detail_square"><br>
+        <div class="chart-bar" id="chartBar"></div> <br>
+        <div class="category_totals" id="categoryTotals"></div>
+        <br><br><br>
+    <div class="reset">
+    <h3>📍 새로운 달에는, 새로운 목표로, 새롭게 시작하기--- <button type="button" onclick="resetData()">reset</button></h4>
+    </div>
+</section>
+</body>
+<!-- Firebase SDK -->
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+    import { getDatabase, ref, onValue, get, update, remove } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js";
+    import { getAuth, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBsC48vTn3D7sCJHkqBQ2A6wVgkax96IPg",
+        authDomain: "selfbook-4ad99.firebaseapp.com",
+        databaseURL: "https://selfbook-4ad99-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "selfbook-4ad99",
+        storageBucket: "selfbook-4ad99.appspot.com",
+        messagingSenderId: "524293661331",
+        appId: "1:524293661331:web:3476ad472b7d719ce1a366",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log('User is logged in:', user);
+        fetchCategoryData(user.uid); // 사용자 UID를 전달하여 데이터 가져오기
+    } else {
+        console.log('User is not logged in');
+        // 로그인 페이지로 이동
+        window.location.href = 'project_login.html';
+    }
+});
+
+let foodInput, convenienceInput, clothingInput, otherInput;
+
+window.onload = function() {
+  foodInput = document.getElementById('food');
+  convenienceInput = document.getElementById('convenience');
+  clothingInput = document.getElementById('clothing');
+  otherInput = document.getElementById('other');
+};
+
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = 'project_login.html'; // Redirect to login page if not logged in
+    } else {
+      console.log('User is logged in:', user);
+    }
+  });
+
+
+
+// 데이터 저장
+window.saveData = async function() {
+  const user = auth.currentUser;
+  if (user) {
+    const userId = user.uid; // 사용자 ID 가져오기
+
+    // 입력 필드들 가져오기
+    const foodInput = document.getElementById('food');
+    const convenienceInput = document.getElementById('convenience');
+    const clothingInput = document.getElementById('clothing');
+    const otherInput = document.getElementById('other');
+
+    if (foodInput && convenienceInput && clothingInput && otherInput) {
+      let food = parseInt(foodInput.value);
+      let convenience = parseInt(convenienceInput.value);
+      let clothing = parseInt(clothingInput.value);
+      let other = parseInt(otherInput.value);
+
+      const userCategoriesRef = ref(db, `users/${userId}/categories`);
+      const snapshot = await get(userCategoriesRef);
+      const currentData = snapshot.val() || {};
+
+      // 이전 값 가져오기
+      let previousFood = currentData.food || 0;
+      let previousConvenience = currentData.convenience || 0;
+      let previousClothing = currentData.clothing || 0;
+      let previousOther = currentData.other || 0;
+
+      // 현재 값과 이전 값의 합 계산
+      food += previousFood;
+      convenience += previousConvenience;
+      clothing += previousClothing;
+      other += previousOther;
+
+      // 입력된 값이 0 이상인 경우에만 이전 값으로 저장
+      if (food >= 0) {
+        foodInput.setAttribute('data-previous-value', food);
+      }
+
+      if (convenience >= 0) {
+        convenienceInput.setAttribute('data-previous-value', convenience);
+      }
+
+      if (clothing >= 0) {
+        clothingInput.setAttribute('data-previous-value', clothing);
+      }
+
+      if (other >= 0) {
+        otherInput.setAttribute('data-previous-value', other);
+      }
+
+      const data = {
+        food: food,
+        convenience: convenience,
+        clothing: clothing,
+        other: other
+      };
+
+      update(userCategoriesRef, data)
+        .then(() => {
+          console.log('Data saved successfully.');
+        })
+        .catch((error) => {
+          console.error('Error writing to Firebase:', error);
+        });
+    } else {
+      console.log('Input fields not found.');
+    }
+  } else {
+    console.log('User not logged in.');
+  }
+};
+
+// 데이터 리셋
+window.resetData = async function() {
+  const user = auth.currentUser;
+  if (user) {
+    const userId = user.uid; // 사용자 ID 가져오기
+
+    const userCategoriesRef = ref(db, `users/${userId}/categories`);
+    
+    remove(userCategoriesRef)
+      .then(() => {
+        console.log('Data reset successfully.');
+        // 폼 입력 필드 초기화
+        document.getElementById('food').value = 0;
+        document.getElementById('convenience').value = 0;
+        document.getElementById('clothing').value = 0;
+        document.getElementById('other').value = 0;
+        updateChart({});
+      })
+      .catch((error) => {
+        console.error('Error resetting data in Firebase:', error);
+      });
+  } else {
+    console.log('User not logged in.');
+  }
+};
+
+// 데이터베이스에서 데이터 읽기
+function fetchCategoryData(userId) {
+  const categoriesRef = ref(db, `users/${userId}/categories`);
+  onValue(categoriesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+          console.log('Data fetched:', data);
+          updateChart(data);
+      } else {
+          console.log('No data available');
+      }
+  }, (error) => {
+      console.error('Error reading from Firebase:', error);
+  });
+}
+
+// 차트 업데이트
+function updateChart(data) {
+    console.log('Updating chart with data:', data); // 데이터 확인을 위한 로그
+    const total = Object.values(data).reduce((sum, value) => sum + value, 0);
+    const chartBar = document.getElementById('chartBar');
+    const categoryTotals = document.getElementById('categoryTotals');
+    chartBar.innerHTML = '';
+    categoryTotals.innerHTML = '';
+
+    for (const [category, value] of Object.entries(data)) {
+        console.log(`Category: ${category}, Value: ${value}, Width: ${(value / total) * 100}%`); // 각 항목의 로그
+        const div = document.createElement('div');
+        div.classList.add('chart-item');
+        div.classList.add(category);
+        div.style.width = `${(value / total) * 100}%`;
+        div.setAttribute('data-value', value);
+        chartBar.appendChild(div);
+
+        // 각 카테고리의 합계를 텍스트로 표시
+        const totalText = document.createElement('div');
+            totalText.classList.add('category-total-text');
+            totalText.textContent = `✔️ Total: ${value.toLocaleString()}원 --- 💸${category}`;
+            categoryTotals.appendChild(totalText);
+    }
+}
+
+// 페이지 로드 시 데이터 가져오기
+window.onload = () => {
+  const user = auth.currentUser;
+  if (user) {
+      fetchCategoryData(user.uid); // 사용자 UID 전달
+  }
+};
+</script>
+</html>
